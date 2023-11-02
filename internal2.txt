@@ -1,0 +1,6 @@
+1. back prop
+2. logistic reg                 similar
+3. Support Vector Machine       similar
+4. Auto Associative Memory
+5. Hetero Associative Memory
+6. Bi-directional Associative Memory
