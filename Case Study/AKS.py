@@ -4,7 +4,7 @@ from PIL import Image
 
 def load_image(image_path):
     img = Image.open(image_path)
-    img = img.convert('L')  # Convert the image to grayscale
+    img = img.convert('L')  
     img = np.array(img)
     return img
 
@@ -22,40 +22,27 @@ def plot_comparison(original, compressed):
     plt.show()
 
 def image_compression_pca(image, n_components):
-    # Mean normalization
     mean = np.mean(image, axis=0)
     normalized_image = image - mean
-
-    # Calculate the covariance matrix
     cov_matrix = np.cov(normalized_image, rowvar=False)
-
-    # Compute eigenvectors and eigenvalues
     eigenvalues, eigenvectors = np.linalg.eig(cov_matrix)
-    
-    # Sort eigenvalues and corresponding eigenvectors
     idx = eigenvalues.argsort()[::-1]
-    eigenvectors = eigenvectors[:, idx]
-    
-    # Choose the top n_components eigenvectors
+    eigenvectors = eigenvectors[:, idx]  
     components = eigenvectors[:, :n_components]
-
-    # Project the normalized image onto the selected components
-    compressed_image = np.dot(components.T, normalized_image.T).T
-
-    # Inverse transformation to reconstruct the image
+    compressed_image = np.dot(components.T, normalized_image.T).T 
     reconstructed_image = np.dot(components, compressed_image.T).T + mean
 
     return reconstructed_image
 
-# Load the image
-image_path = 'original_image.jpg'
-original_image = load_image(image_path)
+if __name__ == "__main__":
+    image_path = 'original_image.jpg'
+    original_image = load_image(image_path)
 
-# Set the number of principal components for compression
-num_components = 50  # Adjust this to change the level of compression
 
-# Compress the image using PCA
-compressed_image = image_compression_pca(original_image, num_components)
+    num_components = 50  
 
-# Plot the original and compressed images
-plot_comparison(original_image, compressed_image)
+
+    compressed_image = image_compression_pca(original_image, num_components)
+
+
+    plot_comparison(original_image, compressed_image)
